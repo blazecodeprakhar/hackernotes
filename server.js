@@ -1,10 +1,11 @@
+require('dotenv').config(); // Load environment variables
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON data
 app.use(express.json());
@@ -12,8 +13,8 @@ app.use(cors());
 app.use(express.static('public')); // Serve files from 'public' folder
 
 // 1. Connect to MongoDB
-// We use 127.0.0.1 instead of localhost to avoid connection issues on some systems
-const mongoUrl = 'mongodb://127.0.0.1:27017/studentDB';
+// Use the Environment Variable if available (Cloud), otherwise use Localhost
+const mongoUrl = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/studentDB';
 
 mongoose.connect(mongoUrl)
     .then(() => console.log('✅ Connected to MongoDB successfully!'))
