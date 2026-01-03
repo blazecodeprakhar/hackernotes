@@ -85,7 +85,7 @@ HackerNotes/
 ## 🔗 Links
 
 -   **👨‍💻 Developer Portfolio**: [https://prakharcodes.netlify.app/](https://prakharcodes.netlify.app/)
--   **🔴 Live Demo**: [Here](https://hackernotes.netlify.app/)
+-   **🔴 Live Demo**: [Here](https://hackernotes.onrender.com/)
 
 ---
 
