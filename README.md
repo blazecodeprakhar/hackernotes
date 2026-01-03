@@ -47,7 +47,7 @@
 
 1.  **Clone the Repository**
     ```bash
-    git clone https://github.com/yourusername/hackernotes.git
+    git clone [https://github.com/blazecodeprakhar/hackernotes.git]
     cd hackernotes
     ```
 
@@ -85,7 +85,7 @@ HackerNotes/
 ## 🔗 Links
 
 -   **👨‍💻 Developer Portfolio**: [https://prakharcodes.netlify.app/](https://prakharcodes.netlify.app/)
--   **🔴 Live Demo**: [Coming Soon](#)
+-   **🔴 Live Demo**: [Here](https://hackernotes.netlify.app/)
 
 ---
 
