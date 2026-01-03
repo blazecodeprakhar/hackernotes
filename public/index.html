@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackerNotes | Secure Terminal</title>
+
+    <!-- Google Fonts: Share Tech Mono (Hacker Style) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dark-mode"> <!-- Default to Dark Mode for Hacker feel -->
+
+    <div class="app-layout">
+        <!-- Sidebar / Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-terminal"></i>
+                <span>_ROOT</span>
+            </div>
+            <nav>
+                <a href="#" class="active" onclick="filterNotes('all')"><i class="fa-solid fa-code"></i> All_Logs</a>
+                <a href="#" onclick="alert('System: Feature encrypted.')"><i class="fa-solid fa-lock"></i>
+                    Secure_Vault</a>
+                <a href="#" class="danger-zone" onclick="clearAllNotesPrompt()"><i class="fa-solid fa-dumpster"></i>
+                    Purge_All</a>
+            </nav>
+
+            <div class="theme-toggle-container">
+                <button id="themeToggle" class="theme-btn" title="Toggle Protocol">
+                    <i class="fa-solid fa-moon"></i> High_Contrast
+                </button>
+            </div>
+
+            <div class="watermark-container">
+                <p>Dev_OS: <a href="https://prakharcodes.netlify.app/" target="_blank">prakhar.dev</a></p>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="header-left">
+                    <button id="mobileMenuBtn" class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h1>> System_Logs / Active Note</h1>
+                </div>
+                <div class="search-bar">
+                    <span class="prompt">$ grep</span>
+                    <input type="text" id="searchInput" placeholder="search_query..." onkeyup="searchNotes()">
+                </div>
+            </header>
+
+            <!-- Creative Input Section -->
+            <section id="publicInputSection" class="create-note-section">
+                <div class="note-input-wrapper">
+                    <input type="text" id="noteTitle" placeholder="> Enter_Subject_ID" autocomplete="off">
+                    <textarea id="noteContent" placeholder="> Awaiting input..." rows="1"></textarea>
+                    <div class="form-actions">
+                        <button class="icon-btn" title="Encrypt"><i class="fa-solid fa-shield-halved"></i></button>
+                        <div class="spacer"></div>
+                        <button onclick="addNote()" class="add-btn">EXECUTE_SAVE</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vault Input Section (Hidden by default) -->
+            <section id="vaultInputSection" class="create-note-section" style="display:none; border-color: red;">
+                <div class="note-input-wrapper" style="border-color: red;">
+                    <input type="text" id="vaultTitle" placeholder="> SECURE_SUBJECT" autocomplete="off"
+                        style="color: #ff4444;">
+                    <textarea id="vaultContent" placeholder="> Encrypted Channel Active..." rows="1"
+                        style="color: #ff4444; border-left-color: red;"></textarea>
+                    <div class="form-actions">
+                        <div class="spacer"></div>
+                        <button onclick="addPrivateNote()" class="add-btn"
+                            style="background: red; color: white;">SAVE_TO_VAULT</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Responsive Grid for Notes -->
+            <section id="notesContainer" class="notes-grid">
+                <!-- Public Notes will be injected here via JS -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Secure Vault Modal -->
+    <div id="vaultModal" class="modal-overlay">
+        <div class="modal-content hacker-modal">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-user-secret"></i> SECURE_VAULT_ACCESS</h2>
+                <button onclick="closeVaultModal()" class="close-modal">X</button>
+            </div>
+
+            <!-- Step 1: Login -->
+            <div id="vaultLogin" class="vault-step">
+                <p>> Enter Access Code:</p>
+                <input type="password" id="vaultPasscode" placeholder="****" class="hacker-input">
+                <button onclick="verifyVaultAccess()" class="hacker-btn">UNLOCK</button>
+                <p class="modal-link" onclick="showVaultReset()">[ Forgot_Access_Code? ]</p>
+            </div>
+
+            <!-- Step 2: Setup (First Time) -->
+            <div id="vaultSetup" class="vault-step" style="display:none;">
+                <p>> SYSTEM: Vault Not Configured.</p>
+                <p>> Create New Passcode:</p>
+                <input type="password" id="newPasscode" placeholder="New Passcode" class="hacker-input">
+
+                <p>> Security Question (Recovery):</p>
+                <select id="secQuestion" class="hacker-input">
+                    <option value="car">What is your first car model?</option>
+                    <option value="pet">What is your first pet's name?</option>
+                    <option value="city">In which city were you born?</option>
+                </select>
+
+                <p>> Answer:</p>
+                <input type="text" id="secAnswer" placeholder="Answer..." class="hacker-input">
+
+                <button onclick="setupVault()" class="hacker-btn">INITIALIZE_VAULT</button>
+            </div>
+
+            <!-- Step 3: Reset -->
+            <div id="vaultReset" class="vault-step" style="display:none;">
+                <p>> RECOVERY_MODE_INITIATED</p>
+                <p id="resetQuestionDisplay">Loading Question...</p>
+                <input type="text" id="resetAnswer" placeholder="Security Answer" class="hacker-input">
+                <input type="password" id="resetNewPass" placeholder="New Passcode" class="hacker-input">
+                <button onclick="resetVaultPass()" class="hacker-btn">RESET_ACCESS</button>
+                <p class="modal-link" onclick="showVaultLogin()">[ Back_To_Login ]</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Login Modal (Mandatory) -->
+    <div id="quickLoginModal" class="modal-overlay open" style="z-index: 3000;">
+        <div class="modal-content hacker-modal" style="border-color: var(--accent);">
+            <div class="modal-header">
+                <h2 style="color: var(--accent);"><i class="fa-solid fa-user-shield"></i> IDENTITY_VERIFICATION</h2>
+            </div>
+
+            <div class="vault-step">
+                <p>> System: Unknown User Detected.</p>
+                <p>> Please identify yourself to proceed:</p>
+
+                <form id="quickLoginForm" onsubmit="handleQuickLogin(event)">
+                    <input type="text" id="loginName" placeholder="Enter Name" class="hacker-input" required
+                        style="margin-bottom: 10px; width: 100%;">
+                    <input type="tel" id="loginNumber" placeholder="Enter Mobile Number" class="hacker-input" required
+                        style="margin-bottom: 10px; width: 100%;">
+
+                    <button type="submit" id="loginBtn" class="hacker-btn"
+                        style="background: var(--accent); color: #000; width: 100%;">
+                        INITIATE_SESSION <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <p id="loginStatus"
+                        style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; text-align: center;"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Action Confirm.</div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
